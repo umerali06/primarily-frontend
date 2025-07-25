@@ -1,0 +1,31 @@
+:root {
+  /* Primary color scheme - Green Accent */
+  --primary-color: #127769;
+  --primary-light: #16a085;
+  --primary-dark: #0e5d52;
+  --primary-hover: #0e5d52;
+  --primary-bg-light: #f0fdf4;
+  --primary-bg: #dcfce7;
+
+  /* Semantic color mappings */
+  --sidebar-green: #127769;
+  --button-primary: #127769;
+  --button-primary-hover: #0e5d52;
+  --link-color: #127769;
+  --link-hover: #0e5d52;
+  --focus-color: #127769;
+  --border-focus: #127769;
+  --text-primary: #127769;
+  --bg-primary-light: #f0fdf4;
+  --bg-primary: #dcfce7;
+
+  /* Status colors */
+  --success-color: #127769;
+  --success-light: #dcfce7;
+  --error-color: #dc2626;
+  --error-light: #fef2f2;
+  --warning-color: #f59e0b;
+  --warning-light: #fffbeb;
+  --info-color: #3b82f6;
+  --info-light: #eff6ff;
+}
