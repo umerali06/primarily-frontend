@@ -67,7 +67,7 @@ export const foldersService = {
 
   // Get folder history
   getFolderHistory: async (id, params = {}) => {
-    const response = await api.get(`/folders/${id}/history`, { params });
+    const response = await api.get(`/folders/${id}/activities`, { params });
     return response.data;
   },
 

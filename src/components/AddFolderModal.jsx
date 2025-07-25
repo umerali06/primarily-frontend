@@ -3,7 +3,7 @@ import { IoClose } from "react-icons/io5";
 import PhotoUploadBox from "./PhotoUploadBox";
 import GreenButton from "./GreenButton";
 import FolderDropdown from "./FolderDropdown";
-import useInventory from "../hooks/useInventory";
+import useFolders from "../hooks/useFolders";
 import toast from "react-hot-toast";
 
 const AddFolderModal = ({ open, onClose }) => {
@@ -15,7 +15,7 @@ const AddFolderModal = ({ open, onClose }) => {
   const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { createFolder } = useInventory();
+  const { createFolder } = useFolders();
 
   const resetForm = () => {
     setName("");

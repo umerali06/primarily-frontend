@@ -160,23 +160,29 @@ const useFolders = () => {
   }, []);
 
   // Create folder with optimistic update
-  const createFolder = useCallback(async (folderData) => {
-    try {
-      const response = await foldersService.createFolder(folderData);
+  const createFolder = useCallback(
+    async (folderData) => {
+      try {
+        const response = await foldersService.createFolder(folderData);
 
-      // Handle both response structures (response.folder or response.data.folder)
-      const folderData = response.data?.folder || response.folder;
+        // Handle both response structures (response.folder or response.data.folder)
+        const newFolder = response.data?.folder || response.folder;
 
-      // Optimistic update
-      setFolders((prev) => [...prev, folderData]);
+        // Optimistic update
+        setFolders((prev) => [...prev, newFolder]);
 
-      toast.success("Folder created successfully");
-      return response;
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to create folder");
-      throw err;
-    }
-  }, []);
+        // Also refresh the folder list to ensure consistency
+        await fetchFolders();
+
+        toast.success("Folder created successfully");
+        return response;
+      } catch (err) {
+        toast.error(err.response?.data?.message || "Failed to create folder");
+        throw err;
+      }
+    },
+    [fetchFolders]
+  );
 
   // Update folder with optimistic update
   const updateFolder = useCallback(

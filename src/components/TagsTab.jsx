@@ -41,6 +41,21 @@ const TagsTab = ({ GREEN }) => {
   const [layoutDropdownOpen, setLayoutDropdownOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest(".dropdown-container")) {
+        setSortDropdownOpen(false);
+        setLayoutDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   // Load tags on component mount
   useEffect(() => {
     fetchTags();
@@ -79,9 +94,8 @@ const TagsTab = ({ GREEN }) => {
   const handleCreateTag = async (tagData) => {
     try {
       await createTag(tagData);
-      toast.success("Tag created successfully!");
+      // Don't call fetchTags() here - the store already updates the state optimistically
       setShowAddTagModal(false);
-      fetchTags(); // Refresh tags list
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to create tag");
     }
@@ -93,7 +107,7 @@ const TagsTab = ({ GREEN }) => {
       toast.success("Tag updated successfully!");
       setShowEditTagModal(false);
       setEditingTag(null);
-      fetchTags(); // Refresh tags list
+      // Don't call fetchTags() here - the store already updates the state
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to update tag");
     }
@@ -111,7 +125,7 @@ const TagsTab = ({ GREEN }) => {
         if (selectedTag && selectedTag._id === tagId) {
           setSelectedTag(null);
         }
-        fetchTags(); // Refresh tags list
+        // Don't call fetchTags() here - the store already updates the state
       } catch (error) {
         toast.error(error.response?.data?.message || "Failed to delete tag");
       }
@@ -212,9 +226,11 @@ const TagsTab = ({ GREEN }) => {
       )}
 
       {/* Sidebar */}
-      <aside className={`${
-        sidebarOpen ? "translate-x-0" : "-translate-x-full"
-      } fixed lg:relative lg:translate-x-0 z-50 w-80 bg-white border-r border-gray-200 flex flex-col p-4 lg:p-6 transition-transform duration-300 ease-in-out h-full lg:h-auto`}>
+      <aside
+        className={`${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } fixed lg:relative lg:translate-x-0 z-50 w-80 bg-white border-r border-gray-200 flex flex-col p-4 lg:p-6 transition-transform duration-300 ease-in-out h-full lg:h-auto`}
+      >
         {/* Mobile close button */}
         <button
           onClick={() => setSidebarOpen(false)}
@@ -359,7 +375,7 @@ const TagsTab = ({ GREEN }) => {
 
               <div className="flex items-center gap-2 ml-auto">
                 {/* Sort Dropdown */}
-                <div className="relative">
+                <div className="relative dropdown-container">
                   <button
                     className="px-3 lg:px-4 py-2 rounded-lg font-semibold text-sm border bg-white border-gray-200 flex items-center gap-2 shadow-sm focus:outline-none min-w-[100px] lg:min-w-[120px]"
                     onClick={() => setSortDropdownOpen(!sortDropdownOpen)}
@@ -371,7 +387,7 @@ const TagsTab = ({ GREEN }) => {
                     <TbChevronDown className="text-base flex-shrink-0" />
                   </button>
                   {sortDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 z-50">
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 z-[9999]">
                       <ul className="py-2">
                         {sortOptions.map((opt) => (
                           <li key={opt.value}>
@@ -412,7 +428,7 @@ const TagsTab = ({ GREEN }) => {
                 </div>
 
                 {/* Layout Switcher */}
-                <div className="relative">
+                <div className="relative dropdown-container">
                   <button
                     className="p-2 rounded-lg border bg-white border-gray-200 flex items-center text-gray-700 shadow-sm focus:outline-none"
                     onClick={() => setLayoutDropdownOpen(!layoutDropdownOpen)}
@@ -420,7 +436,7 @@ const TagsTab = ({ GREEN }) => {
                     <TbLayoutGrid className="text-xl" />
                   </button>
                   {layoutDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 z-50">
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 z-[9999]">
                       <ul>
                         {layoutOptions.map((opt) => (
                           <li key={opt.key}>
